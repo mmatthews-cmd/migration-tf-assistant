@@ -1,0 +1,29 @@
+version: "3.8"
+
+services:
+  terraform-utils:
+    image: hashicorp/terraform:${TERRAFORM_VERSION}
+    env_file: .env
+    environment:
+      - AWS_SDK_LOAD_CONFIG=1
+    entrypoint: ""
+    volumes:
+      - .:/work
+      - ~/.aws:/root/.aws
+    working_dir: /work
+
+  envvars:
+    image: flemay/envvars:0.0.7
+    env_file: .env
+    working_dir: /work
+    volumes:
+      - .:/work
+
+  terraform-migration-assistant:
+    build: _terraform-migration-assistant
+    env_file: .env
+    volumes:
+      - .:/work
+      - ./_templates:/terraform-migration-assistant/_templates
+      - ~/.aws:/root/.aws
+

@@ -1,0 +1,55 @@
+envvars:
+  - name: TERRAFORM_WORKSPACE
+    desc: Terraform Workspace that will be deployed to
+    tags:
+      - terraform
+      - terraform-migration-assistant
+
+  - name: TERRAFORM_ROOT_MODULE
+    desc: Terraform Root Module (Directory) to deploy
+    tags:
+      - terraform
+      - terraform-init
+      - terraform-migration-assistant
+
+  - name: TFMA_TAG_KEY
+    desc: Instance(s) tag key
+    tags:
+      - terraform-migration-assistant
+
+  - name: TFMA_TAG_VALUE
+    desc: Instance(s) tag value
+    tags:
+      - terraform-migration-assistant
+
+  - name: AWS_PROFILE
+    desc: AWS profile to use for assuming role
+    tags:
+      - terraform-migration-assistant      
+
+  - name: TFMA_DEBUG
+    desc: Enable debug logging"
+    optional: true
+    tags:
+      - terraform-migration-assistant
+
+  - name: TFMA_OVERWRITE_EXISTING
+    desc: Overwrite existing files and resources already present in the terraform state file
+    optional: true
+    tags:
+      - terraform-migration-assistant
+
+  - name: AWS_DEFAULT_REGION
+    desc: AWS Region
+    optional: true
+    tags:
+      - terraform-migration-assistant
+
+tags:
+  - name: terraform
+    desc: Required to run Terraform commands
+  - name: terraform-init
+    desc: Required to run Terraform init
+  - name: terraform-migration-assistant
+    desc: Required to run Terraform Migration Assistant
+

@@ -1,0 +1,64 @@
+module "{{ instance_name|replace("-", "_") }}" {
+  source = "../_modules/cmd-tf-aws-ec2"
+
+  instance_name = "{{ instance_name }}"
+  instance_type = "{{ metadata.instance_type }}"
+  ami_id        = "{{ metadata.ami_id }}"
+
+  vpc_id    = "{{ metadata.vpc_id }}"
+  subnet_id = "{{ metadata.subnet_id }}"
+
+  user_data = "{{ metadata.user_data }}"
+
+  ebs_optimized = "{{ metadata.ebsOptimized }}"
+
+  enable_ec2_autorecovery = false
+
+  root_block_device = {
+    delete_on_termination = {{ metadata.ebs_delete_on_termination }}
+    volume_type = "{{ root_volume.type }}"
+    volume_size = {{ root_volume.size }}
+{% if root_volume.encrypted %}
+    encrypted   = {{ root_volume.encrypted|lower }}
+{% endif %}
+{% if root_volume.type == "io1" %}
+    iops        = {{ root_volume.iops }}
+{% endif %}
+{% if root_volume.kms_key_id %}
+    kms_key_id  = "{{ root_volume.kms_key_id }}"
+{% endif %}
+  }
+
+  ebs_block_devices = [
+{% for volume in additional_volumes %}
+    {
+      device_name = "{{ volume.device_name }}"
+      type        = "{{ volume.type }}"
+      size        = {{ volume.size }}
+      encrypted   = {{ volume.encrypted }}
+{% if volume.type == "io1" %}
+      iops        = {{ volume.iops }}
+{% endif %}
+{% if volume.kms_key_id %}
+      kms_key_id  = "{{ volume.kms_key_id }}"
+{% endif %}
+    },
+{% endfor %}
+  ]
+
+  create_security_group         = false
+  additional_security_group_ids = [{{ metadata.security_groups }}]
+
+  custom_instance_profile_name = "{{ metadata.iam_instance_profile }}"
+
+  tags = local.tags
+
+  instance_tags = {
+    {{ metadata.instance_tags }}
+  }
+
+  volume_tags = {
+    {{ metadata.root_volume_tags }}
+  }
+
+}

@@ -1,0 +1,21 @@
+locals {
+  env = {
+    global = {
+      tags = {
+        Workspace        = terraform.workspace
+      }
+    }
+
+    {{ tf_workspace }} = {
+      aws_profile         = "{{ aws_profile }}"
+      aws_region          = "{{ aws_default_region }}"
+    }
+  }
+
+  workspace = local.env[terraform.workspace]
+
+  tags = {
+
+    }
+
+}
